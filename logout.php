@@ -1,8 +1,10 @@
 <?php
 session_start();
+
+// If confirmed → destroy session
 if (isset($_GET['confirm']) && $_GET['confirm'] == 'yes') {
-    session_destroy(); 
-    header("Location: index.php"); 
+    session_destroy();
+    header("Location: login.php"); // 🔁 Better redirect
     exit();
 }
 ?>
@@ -10,20 +12,23 @@ if (isset($_GET['confirm']) && $_GET['confirm'] == 'yes') {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logout</title>
-    <script type="text/javascript">
-        function confirmLogout() {
-            var confirmAction = confirm("Are you sure you want to logout?");
-            if (confirmAction) {
-                window.location.href = "logout.php?confirm=yes";
-            } else {
-                window.location.href = "index.php"; // or any other page
-            }
-        }
-    </script>
+<meta charset="UTF-8">
+<title>Logout</title>
+
+<script>
+function confirmLogout() {
+    let confirmAction = confirm("Are you sure you want to logout?");
+
+    if (confirmAction) {
+        window.location.href = "logout.php?confirm=yes";
+    } else {
+        window.location.href = "dashboard.php"; // 🔁 Better UX
+    }
+}
+</script>
+
 </head>
+
 <body onload="confirmLogout()">
 </body>
 </html>
