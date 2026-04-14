@@ -104,7 +104,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <div class="form-wrapper">
     <div class="card custom-card p-5" data-aos="zoom-in" data-aos-duration="600">
 
-        <h3 class="mb-4 text-center fw-bold text-white">Log New <span style="background: linear-gradient(90deg, #06b6d4, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Intel</span></h3>
+        <h3 class="mb-4 text-center fw-bold text-white">Log New <span style="background: linear-gradient(90deg, #06b6d4, #3b82f6); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Intel</span></h3>
 
         <form method="POST" autocomplete="off">
 
