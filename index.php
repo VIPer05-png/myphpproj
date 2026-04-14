@@ -92,7 +92,7 @@ $result = $conn->query("SELECT * FROM threats ORDER BY created_at DESC LIMIT 5")
 
             <h1 class="display-3 fw-bolder mb-3" style="line-height: 1.1;">
                 Securing the <br>
-                <span style="background: linear-gradient(90deg, #06b6d4, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Cyberhut</span> Network
+                <span style="background: linear-gradient(90deg, #06b6d4, #3b82f6); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Cyberhut</span> Network
             </h1>
             
             <p class="lead text-muted mx-auto mx-lg-0 mb-5" style="max-width: 600px; font-size: 1.15rem;">

@@ -98,6 +98,7 @@ h1, h2, h3, h4, h5, h6, .navbar-brand {
 .navbar-brand {
     background: linear-gradient(90deg, var(--c-primary), var(--c-secondary));
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     text-shadow: 0 0 20px rgba(var(--c-primary-rgb), 0.3);
 }
@@ -251,6 +252,7 @@ a { transition: 0.3s; text-decoration: none; }
 .hero span[style*="linear-gradient"] {
     background: linear-gradient(90deg, var(--c-primary), var(--c-secondary)) !important;
     -webkit-background-clip: text !important;
+    background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
 }
 
