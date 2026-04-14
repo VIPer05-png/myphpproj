@@ -121,7 +121,7 @@ $result = $conn->query("SELECT * FROM threats ORDER BY created_at DESC LIMIT 5")
         <!-- Right 3D Globe MVP -->
         <div class="col-lg-6 mt-5 mt-lg-0 z-0 position-relative d-flex justify-content-center" data-aos="fade-left" data-aos-duration="1200">
             <!-- Pulsing orb underneath globe for extra effect -->
-            <div class="position-absolute top-50 start-50 translate-middle rounded-circle" style="width: 400px; height: 400px; background: radial-gradient(circle, rgba(6, 182, 212, 0.2) 0%, transparent 70%); filter: blur(30px); z-index: -1;"></div>
+            <div class="position-absolute top-50 start-50 translate-middle rounded-circle" style="width: 400px; height: 400px; background: radial-gradient(circle, rgba(6, 182, 212, 0.3) 0%, transparent 70%); z-index: -1; will-change: transform;"></div>
             <div id="globeViz" style="width: 100%; max-width: 600px; height: 500px; cursor: move;"></div>
         </div>
     </div>

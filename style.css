@@ -62,22 +62,22 @@ h1, h2, h3, h4, h5, h6, .navbar-brand {
 .bg-orb-1, .bg-orb-2 {
     position: absolute;
     border-radius: 50%;
-    filter: blur(100px);
     opacity: 0.6;
     animation: drift 20s infinite ease-in-out alternate;
     transition: background 0.5s ease;
+    will-change: transform;
 }
 .bg-orb-1 {
     width: 50vw;
     height: 50vw;
-    background: rgba(var(--c-secondary-rgb), 0.15);
+    background: radial-gradient(circle, rgba(var(--c-secondary-rgb), 0.25) 0%, transparent 70%);
     top: -10%;
     left: -10%;
 }
 .bg-orb-2 {
     width: 60vw;
     height: 60vw;
-    background: rgba(var(--c-primary-rgb), 0.15);
+    background: radial-gradient(circle, rgba(var(--c-primary-rgb), 0.25) 0%, transparent 70%);
     bottom: -10%;
     right: -10%;
     animation-delay: -10s;
@@ -144,9 +144,9 @@ h1, h2, h3, h4, h5, h6, .navbar-brand {
     height: 40vw;
     max-width: 500px;
     max-height: 500px;
-    background: radial-gradient(circle, rgba(var(--c-primary-rgb), 0.25) 0%, transparent 60%);
+    background: radial-gradient(circle, rgba(var(--c-primary-rgb), 0.35) 0%, transparent 70%);
     z-index: -1;
-    filter: blur(50px);
+    will-change: transform, opacity;
     animation: pulseOrb 4s ease-in-out infinite alternate;
 }
 @keyframes pulseOrb {

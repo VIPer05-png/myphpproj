@@ -13,8 +13,17 @@ unset($_SESSION['toast_msg'], $_SESSION['toast_type']);
 $conn = new mysqli("localhost", "root", "", "cyber_dashboard");
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
-}// Fetch threats and prepare analytic data
-$result = $conn->query("SELECT * FROM threats ORDER BY created_at DESC");
+}// Sorting logic
+$sort = $_GET['sort'] ?? 'date_desc';
+switch($sort) {
+    case 'date_asc': $order_by = 'created_at ASC'; break;
+    case 'id_desc': $order_by = 'id DESC'; break;
+    case 'id_asc': $order_by = 'id ASC'; break;
+    case 'date_desc': default: $order_by = 'created_at DESC'; break;
+}
+
+// Fetch threats and prepare analytic data
+$result = $conn->query("SELECT * FROM threats ORDER BY $order_by");
 $threats = [];
 $severity_counts = ['High' => 0, 'Medium' => 0, 'Low' => 0];
 $type_counts = [];
@@ -116,12 +125,22 @@ while($row = $result->fetch_assoc()) {
     <div class="d-flex justify-content-between align-items-center mb-4" data-aos="fade-down">
         <h2 class="text-white fw-bold">Threat <span class="text-info">Dashboard</span></h2>
 
-        <div class="d-flex gap-2 align-items-center">
+        <div class="d-flex gap-2 align-items-center flex-wrap">
             <!-- Filter Search -->
-            <div class="input-group">
+            <div class="input-group" style="width: auto;">
                 <span class="input-group-text bg-dark text-muted border-secondary"><i class="bi bi-search"></i></span>
                 <input type="text" id="threatSearch" class="form-control bg-dark text-white border-secondary" placeholder="Filter intel...">
             </div>
+            
+            <!-- Sort Filter -->
+            <form method="GET" class="d-flex m-0" id="sortForm">
+                <select name="sort" class="form-select bg-dark text-white border-secondary text-muted" style="width: auto; min-width: 140px;" onchange="document.getElementById('sortForm').submit();">
+                    <option value="date_desc" <?= $sort === 'date_desc' ? 'selected' : '' ?>>Date (Newest)</option>
+                    <option value="date_asc" <?= $sort === 'date_asc' ? 'selected' : '' ?>>Date (Oldest)</option>
+                    <option value="id_desc" <?= $sort === 'id_desc' ? 'selected' : '' ?>>ID (Desc)</option>
+                    <option value="id_asc" <?= $sort === 'id_asc' ? 'selected' : '' ?>>ID (Asc)</option>
+                </select>
+            </form>
 
             <!-- 🔐 RBAC: Only Admin -->
             <?php if(isset($_SESSION['role']) && $_SESSION['role']=='admin'): ?>
