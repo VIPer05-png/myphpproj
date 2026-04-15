@@ -59,6 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <link href="style.css" rel="stylesheet">
 <script src="theme.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 
 </head>
 
@@ -111,6 +112,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
 
             <button type="submit" class="btn btn-primary w-100 py-2">Initialize Account</button>
+
+            <div class="d-flex align-items-center my-4">
+                <hr class="flex-grow-1 border-secondary opacity-50">
+                <span class="mx-3 text-muted fw-bold" style="font-size: 0.85rem;">OR REGISTER VIA GOOGLE</span>
+                <hr class="flex-grow-1 border-secondary opacity-50">
+            </div>
+
+            <!-- Google GSI Initialization -->
+            <div id="g_id_onload"
+                 data-client_id="YOUR_GOOGLE_CLIENT_ID"
+                 data-context="signup"
+                 data-ux_mode="popup"
+                 data-login_uri="http://localhost/php-practice/cyberNew/google_auth.php"
+                 data-auto_prompt="false">
+            </div>
+
+            <!-- Render Google Sign-in Button -->
+            <div class="g_id_signin"
+                 data-type="standard"
+                 data-shape="rectangular"
+                 data-theme="filled_black"
+                 data-text="signup_with"
+                 data-size="large"
+                 data-logo_alignment="left"
+                 style="display: flex; justify-content: center;">
+            </div>
 
         </form>
 
