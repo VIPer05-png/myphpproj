@@ -77,7 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="text-center mb-3">
             <img src="logo.png" alt="Cyberhut Logo" style="width: 60px; height: 60px; filter: drop-shadow(0 0 15px rgba(6,182,212,0.5)); border-radius: 12px;">
         </div>
-        <h3 class="text-center text-white mb-4 fw-bold">Join <span style="background: linear-gradient(90deg, #06b6d4, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Cyberhut</span></h3>
+        <h3 class="text-center text-white mb-4 fw-bold">Join <span style="background: linear-gradient(90deg, #06b6d4, #3b82f6); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Cyberhut</span></h3>
 
         <?php if($message): ?>
             <div class="alert text-center">
