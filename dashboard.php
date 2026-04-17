@@ -199,7 +199,13 @@ while($row = $result->fetch_assoc()) {
                         <tr>
 
                             <td class="text-muted">#<?= $row['id'] ?></td>
-                            <td class="fw-500 text-white"><?= $row['title'] ?></td>
+                            <td class="position-relative threat-title-cell">
+                                <span class="fw-500 text-white threat-title-text" data-description="<?= htmlspecialchars($row['description'] ?? 'No description available', ENT_QUOTES) ?>" style="cursor: help; position: relative;">
+                                    <?= htmlspecialchars($row['title']) ?>
+                                    <i class="bi bi-info-circle ms-1" style="font-size: 0.85rem; opacity: 0.6;"></i>
+                                </span>
+                                <div class="description-tooltip" style="display: none;"></div>
+                            </td>
                             <td><span class="badge bg-secondary bg-opacity-25 text-light border border-secondary"><?= $row['type'] ?></span></td>
 
                             <td>
@@ -329,6 +335,40 @@ while($row = $result->fetch_assoc()) {
           },
           maintainAspectRatio: false
       }
+  });
+
+  // Threat Title Tooltip on Hover
+  document.querySelectorAll('.threat-title-text').forEach(element => {
+      const tooltip = element.nextElementSibling;
+      const description = element.getAttribute('data-description');
+      
+      element.addEventListener('mouseenter', function(e) {
+          if (description) {
+              tooltip.textContent = description;
+              tooltip.style.display = 'block';
+              tooltip.style.position = 'absolute';
+              tooltip.style.bottom = '130%';
+              tooltip.style.left = '50%';
+              tooltip.style.transform = 'translateX(-50%)';
+              tooltip.style.background = 'rgba(6, 182, 212, 0.15)';
+              tooltip.style.backdropFilter = 'blur(10px)';
+              tooltip.style.border = '1px solid rgba(6, 182, 212, 0.3)';
+              tooltip.style.borderRadius = '8px';
+              tooltip.style.padding = '12px 16px';
+              tooltip.style.maxWidth = '350px';
+              tooltip.style.color = '#e5e7eb';
+              tooltip.style.fontSize = '0.9rem';
+              tooltip.style.lineHeight = '1.4';
+              tooltip.style.whiteSpace = 'normal';
+              tooltip.style.zIndex = '1000';
+              tooltip.style.boxShadow = '0 8px 32px rgba(6, 182, 212, 0.15)';
+              tooltip.style.wordWrap = 'break-word';
+          }
+      });
+      
+      element.addEventListener('mouseleave', function(e) {
+          tooltip.style.display = 'none';
+      });
   });
 </script>
 

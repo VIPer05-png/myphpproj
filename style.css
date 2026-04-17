@@ -340,6 +340,42 @@ footer {
     padding: 20px 0;
 }
 
+/* Threat Title Tooltip Styles */
+.threat-title-cell {
+    position: relative;
+}
+
+.threat-title-text {
+    cursor: help;
+    transition: all 0.3s ease;
+}
+
+.threat-title-text:hover {
+    color: var(--c-primary);
+    text-shadow: 0 0 10px rgba(var(--c-primary-rgb), 0.5);
+}
+
+.threat-title-text i {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    opacity: 0.6;
+}
+
+.threat-title-text:hover i {
+    transform: scale(1.3) rotate(10deg);
+    opacity: 1;
+}
+
+@keyframes tooltipFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 @media (max-width: 768px) {
     .hero h1 { font-size: 3rem; }
 }

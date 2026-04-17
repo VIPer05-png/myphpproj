@@ -17,9 +17,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $type = $_POST['type'];
     $severity = $_POST['severity'];
     $location = $_POST['location'];
+    $description = $_POST['description'] ?? '';
 
-    $stmt = $conn->prepare("INSERT INTO threats(title,type,severity,location) VALUES(?,?,?,?)");
-    $stmt->bind_param("ssss", $title, $type, $severity, $location);
+    $stmt = $conn->prepare("INSERT INTO threats(title,type,severity,location,description) VALUES(?,?,?,?,?)");
+    $stmt->bind_param("sssss", $title, $type, $severity, $location, $description);
 
     if ($stmt->execute()) {
         $_SESSION['toast_msg'] = "Threat initialized and logged successfully.";
@@ -130,6 +131,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="mb-4">
             <label class="mb-1"><i class="bi bi-geo-alt me-1 text-info"></i>Origin Location</label>
             <input type="text" name="location" class="form-control" placeholder="e.g., Datacenter 4">
+        </div>
+
+        <div class="mb-4">
+            <label class="mb-1"><i class="bi bi-file-text me-1 text-info"></i>Threat Description</label>
+            <textarea name="description" class="form-control" placeholder="Add detailed description of the threat..." rows="4" style="resize: vertical; background: var(--bg-input); border: 1px solid var(--c-primary); border-radius: 8px; color: #e5e7eb;"></textarea>
         </div>
 
         <button type="submit" class="btn btn-primary w-100 py-2">Add Threat to Intel</button>

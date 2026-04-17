@@ -34,9 +34,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $type = $_POST['type'];
     $severity = $_POST['severity'];
     $location = $_POST['location'];
+    $description = $_POST['description'] ?? '';
 
-    $stmt = $conn->prepare("UPDATE threats SET title=?, type=?, severity=?, location=? WHERE id=?");
-    $stmt->bind_param("ssssi", $title, $type, $severity, $location, $id);
+    $stmt = $conn->prepare("UPDATE threats SET title=?, type=?, severity=?, location=?, description=? WHERE id=?");
+    $stmt->bind_param("sssssi", $title, $type, $severity, $location, $description, $id);
 
     if ($stmt->execute()) {
         $_SESSION['toast_msg'] = "Threat parameters successfully updated.";
@@ -163,6 +164,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <input type="text" name="location" value="<?= htmlspecialchars($threat['location']) ?>" class="form-control" required>
                     </div>
                 </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Threat Description</label>
+                <textarea name="description" class="form-control" placeholder="Add detailed description of the threat..." rows="4" style="resize: vertical; background: var(--bg-input); border: 1px solid var(--c-primary); border-radius: 8px; color: #e5e7eb;"><?= htmlspecialchars($threat['description'] ?? '') ?></textarea>
             </div>
 
             <button type="submit" class="btn btn-primary w-100 py-2 mt-2">
