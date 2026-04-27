@@ -346,23 +346,6 @@ while($row = $result->fetch_assoc()) {
           if (description) {
               tooltip.textContent = description;
               tooltip.style.display = 'block';
-              tooltip.style.position = 'absolute';
-              tooltip.style.bottom = '130%';
-              tooltip.style.left = '50%';
-              tooltip.style.transform = 'translateX(-50%)';
-              tooltip.style.background = 'rgba(6, 182, 212, 0.15)';
-              tooltip.style.backdropFilter = 'blur(10px)';
-              tooltip.style.border = '1px solid rgba(6, 182, 212, 0.3)';
-              tooltip.style.borderRadius = '8px';
-              tooltip.style.padding = '12px 16px';
-              tooltip.style.maxWidth = '350px';
-              tooltip.style.color = '#e5e7eb';
-              tooltip.style.fontSize = '0.9rem';
-              tooltip.style.lineHeight = '1.4';
-              tooltip.style.whiteSpace = 'normal';
-              tooltip.style.zIndex = '1000';
-              tooltip.style.boxShadow = '0 8px 32px rgba(6, 182, 212, 0.15)';
-              tooltip.style.wordWrap = 'break-word';
           }
       });
       
