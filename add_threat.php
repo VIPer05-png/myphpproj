@@ -1,9 +1,9 @@
 <?php
 session_start();
 
-// 🔐 RBAC: Only Admin Allowed
-if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
-    header("Location: dashboard.php");
+// 🔐 RBAC: Must be logged in
+if (!isset($_SESSION['user'])) {
+    header("Location: login.php");
     exit();
 }
 
@@ -18,12 +18,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $severity = $_POST['severity'];
     $location = $_POST['location'];
     $description = $_POST['description'] ?? '';
+    
+    // Admins get immediate approval, users go to pending
+    $status = ($_SESSION['role'] === 'admin') ? 'approved' : 'pending';
 
-    $stmt = $conn->prepare("INSERT INTO threats(title,type,severity,location,description) VALUES(?,?,?,?,?)");
-    $stmt->bind_param("sssss", $title, $type, $severity, $location, $description);
+    $stmt = $conn->prepare("INSERT INTO threats(title,type,severity,location,description,status) VALUES(?,?,?,?,?,?)");
+    $stmt->bind_param("ssssss", $title, $type, $severity, $location, $description, $status);
 
     if ($stmt->execute()) {
-        $_SESSION['toast_msg'] = "Threat initialized and logged successfully.";
+        if ($status === 'approved') {
+            $_SESSION['toast_msg'] = "Threat initialized and logged successfully.";
+        } else {
+            $_SESSION['toast_msg'] = "Threat logged and is awaiting Admin verification.";
+        }
         $_SESSION['toast_type'] = "success";
         header("Location: dashboard.php");
         exit();
@@ -75,9 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <?php if(isset($_SESSION['user'])): ?>
                 <li class="nav-item"><a class="nav-link" href="dashboard.php">Dashboard</a></li>
 
-                <?php if($_SESSION['role']=='admin'): ?>
                 <li class="nav-item"><a class="nav-link" href="add_threat.php">Add Threat</a></li>
-                <?php endif; ?>
 
                 <li class="nav-item"><a class="nav-link text-warning fw-500 ms-3">Hi, <?= htmlspecialchars($_SESSION['user']); ?></a></li>
                 <li class="nav-item"><a class="nav-link text-danger fw-500 ms-2" href="logout.php">Logout</a></li>
@@ -138,14 +143,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <textarea name="description" class="form-control" placeholder="Add detailed description of the threat..." rows="4" style="resize: vertical; background: var(--bg-input); border: 1px solid var(--c-primary); border-radius: 8px; color: #e5e7eb;"></textarea>
         </div>
 
-        <button type="submit" class="btn btn-primary w-100 py-2">Add Threat to Intel</button>
+        <button type="submit" class="btn btn-primary w-100 py-2">
+            <?= ($_SESSION['role'] === 'admin') ? 'Add Threat to Intel' : 'Submit Threat for Verification' ?>
+        </button>
 
         </form>
 
     </div>
 </div>
 
-<!-- Bootstrap JS -->
 <!-- FOOTER -->
 <footer class="text-center mt-auto py-3">
     <p class="mb-0 text-muted" style="font-size: 0.9rem;">&copy; 2026 CyberDash Intelligence Systems. All rights secured.</p>

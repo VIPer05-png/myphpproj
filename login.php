@@ -4,7 +4,9 @@ session_start();
 $conn = new mysqli("localhost", "root", "", "cyber_dashboard");
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
-}$error = "";
+}
+
+$error = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -141,7 +143,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 </div>
 
-<!-- Bootstrap JS -->
 <!-- FOOTER -->
 <footer class="text-center mt-auto py-3">
     <p class="mb-0 text-muted" style="font-size: 0.9rem;">&copy; 2026 CyberDash Intelligence Systems. All rights secured.</p>

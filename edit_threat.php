@@ -92,9 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <?php if(isset($_SESSION['user'])): ?>
                 <li class="nav-item"><a class="nav-link" href="dashboard.php">Dashboard</a></li>
 
-                <?php if($_SESSION['role']=='admin'): ?>
                 <li class="nav-item"><a class="nav-link" href="add_threat.php">Add Threat</a></li>
-                <?php endif; ?>
 
                 <li class="nav-item"><a class="nav-link text-warning fw-500 ms-3">Hi, <?= htmlspecialchars($_SESSION['user']); ?></a></li>
                 <li class="nav-item"><a class="nav-link text-danger fw-500 ms-2" href="logout.php">Logout</a></li>
@@ -181,7 +179,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 </div>
 
-<!-- Bootstrap JS -->
 <!-- FOOTER -->
 <footer class="text-center mt-auto py-3">
     <p class="mb-0 text-muted" style="font-size: 0.9rem;">&copy; 2026 CyberDash Intelligence Systems. All rights secured.</p>

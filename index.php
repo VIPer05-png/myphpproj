@@ -3,7 +3,7 @@
 session_start();
 $conn = new mysqli("localhost","root","","cyber_dashboard");
 
-$result = $conn->query("SELECT * FROM threats ORDER BY created_at DESC LIMIT 5");
+$result = $conn->query("SELECT * FROM threats WHERE status = 'approved' ORDER BY created_at DESC LIMIT 5");
 
 ?>
 
@@ -51,9 +51,7 @@ $result = $conn->query("SELECT * FROM threats ORDER BY created_at DESC LIMIT 5")
             <?php if(isset($_SESSION['user'])): ?>
                 <li class="nav-item"><a class="nav-link" href="dashboard.php">Dashboard</a></li>
 
-                <?php if($_SESSION['role']=='admin'): ?>
                 <li class="nav-item"><a class="nav-link" href="add_threat.php">Add Threat</a></li>
-                <?php endif; ?>
 
                 <li class="nav-item"><a class="nav-link text-warning fw-500 ms-3">Hi, <?= $_SESSION['user']; ?></a></li>
                 <li class="nav-item"><a class="nav-link text-danger fw-500 ms-2" href="logout.php">Logout</a></li>
