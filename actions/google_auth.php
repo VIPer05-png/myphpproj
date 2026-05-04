@@ -1,10 +1,7 @@
 <?php
 session_start();
 
-$conn = new mysqli("localhost", "root", "", "cyber_dashboard");
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+require_once '../includes/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['credential'])) {
     
@@ -33,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['credential'])) {
                 $_SESSION['user'] = $user['username'];
                 $_SESSION['role'] = $user['role'];
                 
-                header("Location: dashboard.php");
+                header("Location: ../dashboard.php");
                 exit();
                 
             } else {
@@ -71,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['credential'])) {
                     $_SESSION['toast_msg'] = "Welcome to Cyberhut! Account created via Google.";
                     $_SESSION['toast_type'] = "success";
                     
-                    header("Location: dashboard.php");
+                    header("Location: ../dashboard.php");
                     exit();
                 } else {
                     die("Failed to create user account.");
@@ -86,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['credential'])) {
 
 } else {
     // If accessed directly without POST data
-    header("Location: login.php");
+    header("Location: ../login.php");
     exit();
 }
 ?>

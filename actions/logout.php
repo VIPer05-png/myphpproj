@@ -4,7 +4,7 @@ session_start();
 // If confirmed → destroy session
 if (isset($_GET['confirm']) && $_GET['confirm'] == 'yes') {
     session_destroy();
-    header("Location: login.php"); // 🔁 Better redirect
+    header("Location: ../login.php"); // 🔁 Better redirect
     exit();
 }
 ?>
@@ -22,7 +22,7 @@ function confirmLogout() {
     if (confirmAction) {
         window.location.href = "logout.php?confirm=yes";
     } else {
-        window.location.href = "dashboard.php"; // 🔁 Better UX
+        window.location.href = "../dashboard.php"; // 🔁 Better UX
     }
 }
 </script>

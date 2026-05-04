@@ -10,10 +10,7 @@ $toast_msg = $_SESSION['toast_msg'] ?? null;
 $toast_type = $_SESSION['toast_type'] ?? 'info';
 unset($_SESSION['toast_msg'], $_SESSION['toast_type']);
 
-$conn = new mysqli("localhost", "root", "", "cyber_dashboard");
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+require_once 'includes/db.php';
 
 // Sorting logic
 $sort = $_GET['sort'] ?? 'date_desc';
@@ -61,75 +58,7 @@ while($row = $result->fetch_assoc()) {
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>The Cyberhut</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<!-- Fonts: Outfit for dynamic headings, Poppins for body -->
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
-
-<link href="style.css" rel="stylesheet">
-<script src="theme.js"></script>
-</head>
-
-<body class="d-flex flex-column min-vh-100">
-
-<!-- ANIMATED BACKGROUND -->
-<div class="bg-animated">
-    <div class="bg-orb-1"></div>
-    <div class="bg-orb-2"></div>
-</div>
-
-<!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark px-4 fixed-top mb-5">
-    <a class="navbar-brand fw-bold fs-4 d-flex align-items-center" href="index.php">
-    <img src="logo.png" alt="Logo" width="30" height="30" class="me-2" style="border-radius:6px; box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);">
-    The Cyberhut
-</a>
-
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-
-            <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
-
-            <?php if(isset($_SESSION['user'])): ?>
-                <li class="nav-item"><a class="nav-link" href="dashboard.php">Dashboard</a></li>
-
-                <li class="nav-item"><a class="nav-link" href="add_threat.php">Add Threat</a></li>
-
-                <li class="nav-item"><a class="nav-link text-warning fw-500 ms-3">Hi, <?= htmlspecialchars($_SESSION['user']); ?></a></li>
-                <li class="nav-item"><a class="nav-link text-danger fw-500 ms-2" href="logout.php">Logout</a></li>
-
-            <?php else: ?>
-                <li class="nav-item ms-lg-3"><a class="btn btn-outline-info btn-sm mt-1 mb-1 ms-lg-2" href="login.php">Login</a></li>
-                <li class="nav-item"><a class="btn btn-info btn-sm mt-1 mb-1 ms-lg-2 text-dark fw-bold" href="register.php">Register</a></li>
-            <?php endif; ?>
-
-            <li class="nav-item dropdown ms-lg-3">
-                <a class="nav-link dropdown-toggle text-info" href="#" id="themeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-palette"></i> Theme
-                </a>
-                <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="themeDropdown">
-                    <li><a class="dropdown-item" href="#" onclick="setTheme('default')"><span style="color:#06b6d4;">●</span> Cyberspace</a></li>
-                    <li><a class="dropdown-item" href="#" onclick="setTheme('matrix')"><span style="color:#10b981;">●</span> Matrix Green</a></li>
-                    <li><a class="dropdown-item" href="#" onclick="setTheme('critical')"><span style="color:#f43f5e;">●</span> Critical Red</a></li>
-                </ul>
-            </li>
-
-        </ul>
-    </div>
-</nav>
+<?php include 'includes/header.php'; ?>
 
 <!-- MAIN -->
 <div class="container mt-5 pt-5 pb-5">
@@ -156,7 +85,7 @@ while($row = $result->fetch_assoc()) {
 
             <!-- 🔐 RBAC: Only Admin -->
             <?php if(isset($_SESSION['role']) && $_SESSION['role']=='admin'): ?>
-            <a href="export_threats.php" class="btn btn-outline-success text-nowrap">
+            <a href="actions/export_threats.php" class="btn btn-outline-success text-nowrap">
                 <i class="bi bi-cloud-download me-1"></i> Export CSV
             </a>
             <a href="add_threat.php" class="btn btn-outline-info text-nowrap">
@@ -178,6 +107,8 @@ while($row = $result->fetch_assoc()) {
                         <th>Type</th>
                         <th>Severity</th>
                         <th>Location</th>
+                        <th>Coordinates</th>
+                        <th>Precision</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -196,11 +127,28 @@ while($row = $result->fetch_assoc()) {
                             <span class="severity-pill <?= $sevClass ?>"><?= $pt['severity'] ?></span>
                         </td>
                         <td class="text-muted"><?= htmlspecialchars($pt['location']) ?></td>
+                        <td class="text-info small">
+                            <?php if($pt['latitude'] && $pt['longitude']): ?>
+                                <span><i class="bi bi-geo-fill me-1"></i><?= number_format($pt['latitude'], 4) ?>, <?= number_format($pt['longitude'], 4) ?></span>
+                            <?php else: ?>
+                                <span class="text-muted">Not provided</span>
+                            <?php endif; ?>
+                        </td>
                         <td>
-                            <a href="approve_threat.php?id=<?= $pt['id'] ?>" class="btn btn-success btn-sm rounded-circle me-1" title="Approve">
+                            <?php if($pt['coordinates_verified']): ?>
+                                <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Verified</span>
+                            <?php else: ?>
+                                <span class="badge bg-warning text-dark"><i class="bi bi-exclamation-triangle me-1"></i>Needs Review</span>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <a href="edit_threat.php?id=<?= $pt['id'] ?>" class="btn btn-info btn-sm rounded-circle me-1" title="Edit & Verify">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="actions/approve_threat.php?id=<?= $pt['id'] ?>" class="btn btn-success btn-sm rounded-circle me-1" title="Approve">
                                 <i class="bi bi-check-lg"></i>
                             </a>
-                            <a href="reject_threat.php?id=<?= $pt['id'] ?>" class="btn btn-danger btn-sm rounded-circle" title="Reject" onclick="return confirm('Reject and discard this threat?')">
+                            <a href="actions/reject_threat.php?id=<?= $pt['id'] ?>" class="btn btn-danger btn-sm rounded-circle" title="Reject" onclick="return confirm('Reject and discard this threat?')">
                                 <i class="bi bi-x-lg"></i>
                             </a>
                         </td>
@@ -233,7 +181,7 @@ while($row = $result->fetch_assoc()) {
     </div>
 
     <!-- Threat Geolocation Map -->
-    <div class="card-custom p-0 mb-4 overflow-hidden position-relative" data-aos="fade-up" data-aos-delay="150" style="height: 400px; z-index: 1;">
+    <div class="card-custom p-0 mb-4 overflow-hidden position-relative" data-aos="fade-up" data-aos-delay="150" style="height: 550px; border-radius: 12px; z-index: 1;">
         <div id="threatMap" style="width: 100%; height: 100%;"></div>
         <div class="position-absolute top-0 start-0 m-3 p-2 rounded" style="background: rgba(5,11,20,0.8); backdrop-filter: blur(5px); border: 1px solid rgba(6,182,212,0.3); z-index: 1000; pointer-events: none;">
             <h6 class="text-info mb-0 fw-bold m-0" style="font-size: 0.85rem; letter-spacing: 1px;"><i class="bi bi-radar me-2"></i>LIVE INTEL MAP</h6>
@@ -252,6 +200,7 @@ while($row = $result->fetch_assoc()) {
                         <th>Type</th>
                         <th>Severity</th>
                         <th>Location</th>
+                        <th>Coordinates</th>
                         <th>Date</th>
                         <th>Action</th>
                     </tr>
@@ -285,6 +234,16 @@ while($row = $result->fetch_assoc()) {
                             </td>
 
                             <td class="text-muted"><i class="bi bi-geo-alt me-1"></i><?= $row['location'] ?></td>
+                            <td class="text-info small">
+                                <?php if($row['latitude'] && $row['longitude']): ?>
+                                    <span><i class="bi bi-pin-map-fill me-1"></i><?= number_format($row['latitude'], 4) ?>, <?= number_format($row['longitude'], 4) ?></span>
+                                    <?php if($row['coordinates_verified']): ?>
+                                        <span class="badge bg-success bg-opacity-50 ms-1"><i class="bi bi-check-circle me-1"></i>Verified</span>
+                                    <?php endif; ?>
+                                <?php else: ?>
+                                    <span class="text-muted small">N/A</span>
+                                <?php endif; ?>
+                            </td>
                             <td class="text-muted"><?= $row['created_at'] ?></td>
 
                             <td>
@@ -294,7 +253,7 @@ while($row = $result->fetch_assoc()) {
                                         <i class="bi bi-pencil"></i>
                                     </a>
 
-                                    <a href="delete_threat.php?id=<?= $row['id'] ?>" 
+                                    <a href="actions/delete_threat.php?id=<?= $row['id'] ?>" 
                                        class="btn btn-danger btn-sm rounded-circle"
                                        title="Delete"
                                        onclick="return confirm('Are you sure you want to delete this threat record?')">
@@ -323,10 +282,7 @@ while($row = $result->fetch_assoc()) {
 
 </div>
 
-<!-- FOOTER -->
-<footer class="text-center mt-auto py-3">
-    <p class="mb-0 text-muted" style="font-size: 0.9rem;">&copy; 2026 CyberDash Intelligence Systems. All rights secured.</p>
-</footer>
+<?php include 'includes/footer.php'; ?>
 
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -439,14 +395,24 @@ while($row = $result->fetch_assoc()) {
 
   // --- LEAFLET MAP LOGIC ---
   const mapData = <?= json_encode($threats) ?>;
-  const map = L.map('threatMap', { zoomControl: false }).setView([20, 0], 2);
+  const bounds = [
+      [-90, -180], // Southwest coordinates
+      [90, 180]    // Northeast coordinates
+  ];
+  const map = L.map('threatMap', { 
+      zoomControl: false,
+      maxBounds: bounds,
+      maxBoundsViscosity: 1.0,
+      minZoom: 2
+  }).setView([20, 0], 2);
   
   L.control.zoom({ position: 'bottomright' }).addTo(map);
 
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
       attribution: '&copy; OpenStreetMap &copy; CARTO',
       subdomains: 'abcd',
-      maxZoom: 19
+      maxZoom: 19,
+      noWrap: true
   }).addTo(map);
 
   // Instant coordinate lookup for accurate positioning
@@ -497,42 +463,27 @@ while($row = $result->fetch_assoc()) {
           .catch(() => null);
   }
 
-  // Plot all threats instantly
+  // Plot all threats using precise coordinates
   async function plotThreats() {
-      const geoCache = {};
-      let apiQueue = [];
-
       for (const threat of mapData) {
-          if (!threat.location || threat.location.trim() === '') continue;
-          const locName = threat.location.trim();
-          const key = locName.toLowerCase();
-
-          // Try instant lookup first
-          if (GEO_DB[key]) {
-              addMarker(GEO_DB[key], threat, locName);
-          } else if (geoCache[key]) {
-              addMarker(geoCache[key], threat, locName);
-          } else {
-              apiQueue.push({ threat, locName, key });
-          }
-      }
-
-      // Process any unknown locations via API (with delay)
-      for (const item of apiQueue) {
-          if (geoCache[item.key]) {
-              addMarker(geoCache[item.key], item.threat, item.locName);
-              continue;
-          }
-          await new Promise(r => setTimeout(r, 1100));
-          const coords = await getCoords(item.locName);
-          if (coords) {
-              geoCache[item.key] = coords;
-              addMarker(coords, item.threat, item.locName);
+          // Prioritize precise coordinates over location lookup
+          let lat = parseFloat(threat.latitude);
+          let lng = parseFloat(threat.longitude);
+          
+          // If precise coordinates available, use them directly
+          if (!isNaN(lat) && !isNaN(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
+              addMarker([lat, lng], threat, threat.location, true);
+          } else if (threat.location && threat.location.trim() !== '') {
+              // Fallback: try to geocode from location name
+              const coords = await getCoords(threat.location);
+              if (coords) {
+                  addMarker(coords, threat, threat.location, false);
+              }
           }
       }
   }
 
-  function addMarker(coords, threat, locName) {
+  function addMarker(coords, threat, locName, isPrecise) {
       const sevColor = threat.severity.toLowerCase() === 'high' ? '#ef4444'
                      : threat.severity.toLowerCase() === 'medium' ? '#f59e0b' : '#10b981';
       const dotSize = threat.severity.toLowerCase() === 'high' ? 14 : (threat.severity.toLowerCase() === 'medium' ? 11 : 9);
@@ -544,14 +495,18 @@ while($row = $result->fetch_assoc()) {
           iconAnchor: [10, 10]
       }) }).addTo(map);
 
+      const precisionBadge = isPrecise ? '<span style="color:#10b981; font-size:0.75rem;"><i class="bi bi-check-circle me-1"></i>High Precision</span>' : '<span style="color:#f59e0b; font-size:0.75rem;"><i class="bi bi-info-circle me-1"></i>Estimated</span>';
+      
       marker.bindPopup(`
-          <div style="min-width:180px;">
+          <div style="min-width:200px;">
               <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
                   <span style="width:8px;height:8px;border-radius:50%;background:${sevColor};display:inline-block;"></span>
                   <strong style="color:${sevColor};font-size:0.85rem;">${threat.severity.toUpperCase()} SEVERITY</strong>
               </div>
               <b style="font-size:1rem;">${threat.title}</b><br/>
-              <span style="color:#94a3b8;font-size:0.8rem;">${threat.type} — ${locName}</span>
+              <span style="color:#94a3b8;font-size:0.8rem;">${threat.type} — ${locName}</span><br/>
+              <span style="color:#94a3b8;font-size:0.75rem;"><i class="bi bi-geo-fill me-1"></i>${coords[0].toFixed(6)}, ${coords[1].toFixed(6)}</span><br/>
+              ${precisionBadge}
           </div>
       `);
   }

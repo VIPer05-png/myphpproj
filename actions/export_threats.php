@@ -6,10 +6,7 @@ if (!isset($_SESSION['user']) || $_SESSION['role'] !== 'admin') {
     die("Access Denied: You must be an administrator to generate exports.");
 }
 
-$conn = new mysqli("localhost", "root", "", "cyber_dashboard");
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}// Set Headers for CSV force-download
+require_once '../includes/db.php';// Set Headers for CSV force-download
 header('Content-Type: text/csv');
 header('Content-Disposition: attachment; filename="Cyberhut_Threat_Intel_' . date('Y-m-d') . '.csv"');
 header('Cache-Control: no-cache, no-store, must-revalidate');

@@ -3,14 +3,11 @@ session_start();
 
 // 🔐 RBAC: Only Admin can delete
 if (!isset($_SESSION['user']) || $_SESSION['role'] != 'admin') {
-    header("Location: dashboard.php");
+    header("Location: ../dashboard.php");
     exit();
 }
 
-$conn = new mysqli("localhost", "root", "", "cyber_dashboard");
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+require_once '../includes/db.php';
 
 // 🔐 Validate ID
 if (isset($_GET['id']) && is_numeric($_GET['id'])) {
@@ -25,6 +22,6 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 }
 
 // Redirect back
-header("Location: dashboard.php");
+header("Location: ../dashboard.php");
 exit();
 ?>

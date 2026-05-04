@@ -1,10 +1,7 @@
 <?php
 session_start();
 
-$conn = new mysqli("localhost", "root", "", "cyber_dashboard");
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+require_once 'includes/db.php';
 
 $error = "";
 
@@ -54,8 +51,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <!-- Icons -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
-<link href="style.css" rel="stylesheet">
-<script src="theme.js"></script>
+<link href="assets/css/style.css" rel="stylesheet">
+<script src="assets/js/theme.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 
 </head>
@@ -72,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="card login-card p-4">
 
         <div class="text-center mb-3">
-            <img src="logo.png" alt="Cyberhut Logo" style="width: 60px; height: 60px; filter: drop-shadow(0 0 15px rgba(6,182,212,0.5)); border-radius: 12px;">
+            <img src="assets/images/logo.png" alt="Cyberhut Logo" style="width: 60px; height: 60px; filter: drop-shadow(0 0 15px rgba(6,182,212,0.5)); border-radius: 12px;">
         </div>
         <h3 class="text-center text-white mb-4 fw-bold">Login to <span style="background: linear-gradient(90deg, #06b6d4, #3b82f6); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Cyberhut</span></h3>
 
@@ -114,7 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                  data-client_id="YOUR_GOOGLE_CLIENT_ID"
                  data-context="signin"
                  data-ux_mode="popup"
-                 data-login_uri="http://localhost/php-practice/cyberNew/google_auth.php"
+                 data-login_uri="http://localhost/php-practice/cyberNew/actions/google_auth.php"
                  data-auto_prompt="false">
             </div>
 
@@ -143,10 +140,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 </div>
 
-<!-- FOOTER -->
-<footer class="text-center mt-auto py-3">
-    <p class="mb-0 text-muted" style="font-size: 0.9rem;">&copy; 2026 CyberDash Intelligence Systems. All rights secured.</p>
-</footer>
+<?php include 'includes/footer.php'; ?>
 
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
